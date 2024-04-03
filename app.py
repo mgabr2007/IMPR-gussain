@@ -55,9 +55,11 @@ def main():
                 st.image(result_image, caption='Blurred Image', use_column_width=True)
 
 # Define a function for face detection
+import face_recognition
+
 def detect_faces(image):
     """
-    Detect faces in an image using OpenCV's Haar cascade classifier.
+    Detect faces in an image using the face_recognition library.
 
     Parameters:
     - image: PIL.Image object.
@@ -68,23 +70,16 @@ def detect_faces(image):
     # Convert PIL image to numpy array
     image_array = np.array(image)
     
-    # Convert to grayscale for face detection
-    gray_image = cv2.cvtColor(image_array, cv2.COLOR_BGR2GRAY)
+    # Use the face_recognition library to find face locations
+    face_locations = face_recognition.face_locations(image_array)
     
-    # Load Haar cascade classifier
-    face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+    # Use PIL to draw rectangles around each face
+    draw = ImageDraw.Draw(image)
+    for top, right, bottom, left in face_locations:
+        draw.rectangle(((left, top), (right, bottom)), outline=(255, 0, 0), width=2)
     
-    # Detect faces
-    faces = face_cascade.detectMultiScale(gray_image, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30), flags=cv2.CASCADE_SCALE_IMAGE)
-    
-    # Draw rectangles around each face
-    for (x, y, w, h) in faces:
-        cv2.rectangle(image_array, (x, y), (x+w, y+h), (255, 0, 0), 2)
-    
-    # Convert numpy array back to PIL image
-    image_with_faces = Image.fromarray(image_array)
-    
-    return image_with_faces
+    return image
+
 
 # Main function to layout the Streamlit app
 def main():
