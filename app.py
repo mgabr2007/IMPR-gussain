@@ -54,6 +54,5 @@ def main():
                 # Display the blurred image
                 st.image(result_image, caption='Blurred Image', use_column_width=True)
 
-
-  if __name__ == "__main__":
+if __name__ == "__main__":
      main()
