@@ -38,9 +38,12 @@ def detect_faces_and_blur_background(image):
     face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
     faces = face_cascade.detectMultiScale(gray_image, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30), flags=cv2.CASCADE_SCALE_IMAGE)
     for (x, y, w, h) in faces:
-        blurred_image[y:y+h, x:x+w] = cv2.cvtColor(image_array[y:y+h, x:x+w], cv2.COLOR_BGR2GRAY)
+        gray_face_region = cv2.cvtColor(image_array[y:y+h, x:x+w], cv2.COLOR_BGR2GRAY)
+        color_face_region = cv2.cvtColor(gray_face_region, cv2.COLOR_GRAY2BGR)
+        blurred_image[y:y+h, x:x+w] = color_face_region
     image_with_unblurred_faces = Image.fromarray(blurred_image)
     return image_with_unblurred_faces
+
 
 # Main function to layout the Streamlit app
 def main():
