@@ -53,7 +53,9 @@ def main():
     
     if uploaded_file is not None:
         image = Image.open(uploaded_file)
-        st.image(image, caption='Uploaded Image', use_column_width=True)
+        col1, col2 = st.columns(2)
+        with col1:
+            st.image(image, caption='Uploaded Image', use_column_width=True)
         
         process_option = st.selectbox("Choose an image processing option:", ["Gaussian Blur", "Detect & Preserve Faces"])
 
@@ -63,12 +65,15 @@ def main():
                 st.error("Kernel size must be an odd number.")
             elif st.button("Apply Gaussian Blur"):
                 result_image = apply_gaussian_blur(image, kernel_size)
-                st.image(result_image, caption='Blurred Image', use_column_width=True)
+                with col2:
+                    st.image(result_image, caption='Blurred Image', use_column_width=True)
                 
         elif process_option == "Detect & Preserve Faces":
             if st.button("Detect Faces & Blur Background"):
                 result_image = detect_faces_and_blur_background(image)
-                st.image(result_image, caption='Background Blurred with Faces in Black & White', use_column_width=True)
+                with col2:
+                    st.image(result_image, caption='Background Blurred with Faces in Black & White', use_column_width=True)
+
 
 if __name__ == "__main__":
     main()
